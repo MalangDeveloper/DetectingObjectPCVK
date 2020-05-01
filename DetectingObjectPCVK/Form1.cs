@@ -143,14 +143,133 @@ namespace DetectingObjectPCVK
             ScrollDown();
         }
 
-        #region Form_Load, Closing
-        private void Form1_Load(object sender, EventArgs e)
+        private void sbBlueColor_Scroll(object sender, ScrollEventArgs e)
+        {
+            iBlueValue = sbBlueColor.Value;
+
+            listBox1.Items.Add("Blue: " + iBlueValue.ToString());
+            ScrollDown();
+        }
+
+        private void sbGreenColor_Scroll(object sender, ScrollEventArgs e)
+        {
+            iGreenValue = sbGreenColor.Value;
+
+            listBox1.Items.Add("Green: " + iGreenValue.ToString());
+            ScrollDown();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
 
+        private void rbRed_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbRed.Checked == true)
+            {
+                iColorMode = 1;
+                sbRadius.Value = 100;
+                iRadius = sbRadius.Value;
+
+                sbRedColor.Value = 220;
+                sbGreenColor.Value = 30;
+                sbBlueColor.Value = 30;
+
+                listBox1.Items.Add("Red: " + iRedValue.ToString());
+                ScrollDown();
+            }
+        }
+
+        private void rbBlue_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBlue.Checked == true)
+            {
+                iColorMode = 2;
+                sbRadius.Value = 180;
+                iRadius = sbRadius.Value;
+
+                sbRedColor.Value = 30;
+                sbGreenColor.Value = 30;
+                sbBlueColor.Value = 240;
+
+                listBox1.Items.Add("Blue: " + iBlueValue.ToString());
+                ScrollDown();
+            }
+        }
+
+        private void rbGreen_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbGreen.Checked == true)
+            {
+                iColorMode = 3;
+                sbRadius.Value = 180;
+                iRadius = sbRadius.Value;
+
+                sbRedColor.Value = 5;
+                sbGreenColor.Value = 240;
+                sbBlueColor.Value = 5;
+
+                listBox1.Items.Add("Green: " + iGreenValue.ToString());
+                ScrollDown();
+            }
+        }
+
+        private void sbRadius_Scroll(object sender, ScrollEventArgs e)
+        {
+            iRadius = sbRadius.Value;
+            listBox1.Items.Add(iRadius.ToString());
+            ScrollDown();
+        }
+
+        private void cbBlur_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbBlur.Checked)
+                _blurFlag = true;
+            else
+                _blurFlag = false;
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                StopCameras();
+                SrartCameras(comboBox1.SelectedIndex);
+                //CaptureDevi.NewFrame += new NewFrameEventHandler(CaptureDevi_NewFrame);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void sbThreshold_Scroll(object sender, ScrollEventArgs e)
+        {
+            iThreshold = sbThreshold.Value;
+            listBox1.Items.Add(iThreshold.ToString());
+            ScrollDown();
+        }
+
+        private double FindDistance(int _pixel)
+        {
+            ///
+            /// distance(D): distance of object from the camera
+            /// _focalLength(F): focal length of camera
+            /// _pixel(P): apparent width in pixel
+            /// _ObjectWidth(W): width of object
+            /// 
+            /// F = (P*D)/W
+            ///     -> D = (W*F)/P
+            ///
+            double _distance;
+            double _ObjectWidth = 10, _focalLength = 604.8;
+
+            //_distance = Convert.ToInt16((_ObjectWidth * _focalLength) / _pixel);
+            _distance = (_ObjectWidth * _focalLength) / _pixel;
+
+            return _distance;
         }
         #endregion
 
