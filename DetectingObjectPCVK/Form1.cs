@@ -222,15 +222,6 @@ namespace DetectingObjectPCVK
             ScrollDown();
         }
 
-        private void cbBlur_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbBlur.Checked)
-                _blurFlag = true;
-            else
-                _blurFlag = false;
-
-        }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -273,114 +264,84 @@ namespace DetectingObjectPCVK
         }
         #endregion
 
-        #region MyMethods
-        private void SrartCameras(int deviceindex)
-        {
-
-        }
-
-        private void StopCameras()
-        {
-
-        }
-
-        void ScrollDown()
-        {
-
-        }
-
-        private void get_Frame(object sender, NewFrameEventArgs eventArgs)
-        {
-
-        }
-
-        //private System.Drawing.Point[] ToPointsArray(List<IntPoint> points)
-        //{
-
-        //}
-
-        private void sbRedColor_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void sbBlueColor_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void sbGreenColor_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rbRed_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rbBlue_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void rbGreen_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void sbRadius_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void sbThreshold_Scroll(object sender, ScrollEventArgs e)
-        {
-
-        }
-
-        private double FindDistance(int _pixel)
-        {
-            ///
-            /// distance(D): distance of object from the camera
-            /// _focalLength(F): focal length of camera
-            /// _pixel(P): apparent width in pixel
-            /// _ObjectWidth(W): width of object
-            /// 
-            /// F = (P*D)/W
-            ///     -> D = (W*F)/P
-            return _pixel;
-        }
-        #endregion
-
         #region Blob Detection
-        /// <summary> Blob Detection    
-        /// This method for color object detection by Blob counter algorithm.
-        /// If you using this method, then you can detecting as follows:
-        ///             red circle, rectangle, triangle
-        ///             blue circle, rectangle, triangle
-        ///             green circle, rectangle, triangle
-        /// the process of this method as follow:
-        ///     1. color filtering by Euclidean filtering(R, G, B).
-        ///     2. the grayscale filtering based on color filtered image.
-        ///     3. the binary filtering based on edge filter image.
-        ///     4. Finally, detecting object, distance from the camera and degree are expreed on picturebox 1.
-        /// </summary>
 
-        //private Bitmap BlobDetection(Bitmap _bitmapSourceImage)
-        //{
-            
-        //}
+        private Bitmap BlobDetection(Bitmap _bitmapSourceImage)
+        {
+            #region Color filtering by Euclidean filtering       
+            switch (iColorMode)
+            {
+                case 1:
+                    //_colorFilter.CenterColor = new RGB(230, 30, 30);
+                    iRedValue = sbRedColor.Value;
+                    iBlueValue = sbBlueColor.Value;
+                    iGreenValue = sbGreenColor.Value;
+
+                    _colorFilter.CenterColor = new RGB((byte)iRedValue, (byte)iGreenValue, (byte)iBlueValue);
+                    _colorFilter.Radius = (short)iRadius;
+                    _colorFilterImage = _colorFilter.Apply(_bitmapSourceImage);
+                    break;
+                case 2:
+                    iRedValue = sbRedColor.Value;
+                    iBlueValue = sbBlueColor.Value;
+                    iGreenValue = sbGreenColor.Value;
+
+                    _colorFilter.CenterColor = new RGB((byte)iRedValue, (byte)iGreenValue, (byte)iBlueValue);
+                    _colorFilter.Radius = (short)iRadius;
+                    _colorFilterImage = _colorFilter.Apply(_bitmapSourceImage);
+                    break;
+                case 3:
+                    iRedValue = sbRedColor.Value;
+                    iBlueValue = sbBlueColor.Value;
+                    iGreenValue = sbGreenColor.Value;
+
+                    _colorFilter.CenterColor = new RGB((byte)iRedValue, (byte)iGreenValue, (byte)iBlueValue);
+                    _colorFilter.Radius = (short)iRadius;
+                    _colorFilterImage = _colorFilter.Apply(_bitmapSourceImage);
+                    break;
+            }
+            #endregion
+
+            Grayscale _grayscale = new Grayscale(0.2125, 0.7154, 0.0721);
+            _bitmapGreyImage = _grayscale.Apply(_colorFilterImage);
+
+            #region blur option with Edge filter
+            //create a edge detector instance
+            if (_blurFlag == true)
+            {
+                //Blur _blurfilter = new Blur();
+                GaussianBlur _blurfilter = new GaussianBlur(1.5);
+                _bitmapBlurImage = _blurfilter.Apply(_bitmapGreyImage);
+                _bitmapEdgeImage = _edgeFilter.Apply(_bitmapBlurImage);
+            }
+            else if (_blurFlag == false)
+            {
+                _bitmapEdgeImage = _edgeFilter.Apply(_bitmapGreyImage);
+            }
+            #endregion
+
+            Threshold _threshold = new Threshold(iThreshold);
+            _bitmapBinaryImage = _threshold.Apply(_bitmapEdgeImage);
+
+            ///
+            /// blob counter algorithm initailze. 
+            /// BlobCounter.MinWidth and MinHeight -> for the defined minimum region
+            ///
+            BlobCounter _blobCounter = new BlobCounter();
+            //Configure Filter
+            _blobCounter.MinWidth = 70;
+            _blobCounter.MinHeight = 70;
+            _blobCounter.FilterBlobs = true;
+            _blobCounter.ProcessImage(_bitmapBinaryImage);
+
+            Blob[] _blobPoints = _blobCounter.GetObjectsInformation();
+            Graphics _g = Graphics.FromImage(_bitmapSourceImage);
+            SimpleShapeChecker _shapeChecker = new SimpleShapeChecker();
+
+
+
+            return _bitmapSourceImage;
+        }
         #endregion
     }
 }

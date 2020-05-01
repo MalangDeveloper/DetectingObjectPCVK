@@ -65,6 +65,7 @@ namespace DetectingObjectPCVK
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(282, 28);
             this.comboBox1.TabIndex = 0;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // pictureBox1
             // 
@@ -76,6 +77,7 @@ namespace DetectingObjectPCVK
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // listBox1
             // 
@@ -131,6 +133,7 @@ namespace DetectingObjectPCVK
             this.sbThreshold.Size = new System.Drawing.Size(188, 22);
             this.sbThreshold.TabIndex = 17;
             this.sbThreshold.Value = 40;
+            this.sbThreshold.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sbThreshold_Scroll);
             // 
             // label1
             // 
@@ -174,6 +177,7 @@ namespace DetectingObjectPCVK
             this.rbGreen.TabStop = true;
             this.rbGreen.Text = "Green";
             this.rbGreen.UseVisualStyleBackColor = true;
+            this.rbGreen.CheckedChanged += new System.EventHandler(this.rbGreen_CheckedChanged);
             // 
             // label2
             // 
@@ -196,6 +200,7 @@ namespace DetectingObjectPCVK
             this.rbBlue.TabStop = true;
             this.rbBlue.Text = "Blue";
             this.rbBlue.UseVisualStyleBackColor = true;
+            this.rbBlue.CheckedChanged += new System.EventHandler(this.rbBlue_CheckedChanged);
             // 
             // sbGreenColor
             // 
@@ -205,6 +210,7 @@ namespace DetectingObjectPCVK
             this.sbGreenColor.Size = new System.Drawing.Size(188, 22);
             this.sbGreenColor.TabIndex = 17;
             this.sbGreenColor.Value = 30;
+            this.sbGreenColor.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sbGreenColor_Scroll);
             // 
             // rbRed
             // 
@@ -218,6 +224,7 @@ namespace DetectingObjectPCVK
             this.rbRed.TabStop = true;
             this.rbRed.Text = "Red";
             this.rbRed.UseVisualStyleBackColor = true;
+            this.rbRed.CheckedChanged += new System.EventHandler(this.rbRed_CheckedChanged);
             // 
             // sbRedColor
             // 
@@ -227,6 +234,7 @@ namespace DetectingObjectPCVK
             this.sbRedColor.Size = new System.Drawing.Size(188, 22);
             this.sbRedColor.TabIndex = 17;
             this.sbRedColor.Value = 220;
+            this.sbRedColor.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sbRedColor_Scroll);
             // 
             // sbBlueColor
             // 
@@ -236,6 +244,7 @@ namespace DetectingObjectPCVK
             this.sbBlueColor.Size = new System.Drawing.Size(188, 22);
             this.sbBlueColor.TabIndex = 17;
             this.sbBlueColor.Value = 30;
+            this.sbBlueColor.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sbBlueColor_Scroll);
             // 
             // sbRadius
             // 
@@ -245,6 +254,7 @@ namespace DetectingObjectPCVK
             this.sbRadius.Size = new System.Drawing.Size(188, 22);
             this.sbRadius.TabIndex = 17;
             this.sbRadius.Value = 100;
+            this.sbRadius.Scroll += new System.Windows.Forms.ScrollEventHandler(this.sbRadius_Scroll);
             // 
             // textBox1
             // 
@@ -284,6 +294,7 @@ namespace DetectingObjectPCVK
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "Detecting Object PCVK";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
