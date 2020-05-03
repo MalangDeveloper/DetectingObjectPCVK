@@ -338,7 +338,64 @@ namespace DetectingObjectPCVK
             Graphics _g = Graphics.FromImage(_bitmapSourceImage);
             SimpleShapeChecker _shapeChecker = new SimpleShapeChecker();
 
+            for (int i = 0; i < _blobPoints.Length; i++)
+            {
+                List<IntPoint> _edgePoint = _blobCounter.GetBlobsEdgePoints(_blobPoints[i]);
+                List<IntPoint> _corners = null;
+                AForge.Point _center;
+                float _radius;
+                #region detecting Rectangle
+                ///
+                /// _corners: the corner of Quadrilateral
+                /// 
+                if (_shapeChecker.IsQuadrilateral(_edgePoint, out _corners))
+                {
+                    //Drawing the reference point of the picturebox
+                    _g.DrawEllipse(_PictureboxPen, (float)(pictureBox1.Size.Width),
+                                                   (float)(pictureBox1.Size.Height),
+                                                   (float)10, (float)10);
 
+                    // Drawing setting for outline of detected object
+                    Rectangle[] _rects = _blobCounter.GetObjectsRectangles();                   
+                    System.Drawing.Point[] _coordinates = ToPointsArray(_corners);
+                    Pen _pen = new Pen(Color.Blue, ipenWidth);
+                    int _x = _coordinates[0].X;
+                    int _y = _coordinates[0].Y;
+
+                    // Drawing setting for centroid of detected object
+                    int _centroid_X = (int)_blobPoints[0].CenterOfGravity.X;
+                    int _centroid_Y = (int)_blobPoints[0].CenterOfGravity.Y;                                        
+
+                    //Drawing the centroid point of object
+                    _g.DrawEllipse(_pen, (float)(_centroid_X), (float)(_centroid_Y), (float)10, (float)10);
+                    //Degree calculation
+                    int _deg_x = (int)_centroid_X - pictureBox1.Size.Width;
+                    int _deg_y = pictureBox1.Size.Height - (int)_centroid_Y;
+                    textBox1.Text = ("Degree: (" + _deg_x + ", " + _deg_y + ")");
+
+                    ///
+                    /// Drawing outline of detected object
+                    /// 
+                    if (_coordinates.Length == 4)
+                    {                        
+                        string _shapeString = "" + _shapeChecker.CheckShapeType(_edgePoint);
+                        _g.DrawString(_shapeString, _font, _brush, _x, _y);
+                        _g.DrawPolygon(_pen, ToPointsArray(_corners));                        
+                    }
+
+                    //size of rectange
+                    foreach (Rectangle rc in _rects)
+                    {
+                        ///for debug
+                        //System.Diagnostics.Debug.WriteLine(
+                        //    string.Format("Rect size: ({0}, {1})", rc.Width, rc.Height));
+
+                        iFeatureWidth = rc.Width;
+                        //check the FindDistance method.
+                        double dis = FindDistance(iFeatureWidth);
+                        _g.DrawString(dis.ToString("N2") + "cm", _font, _brush, _x, _y + 60);
+                    }
+                }
 
             return _bitmapSourceImage;
         }
