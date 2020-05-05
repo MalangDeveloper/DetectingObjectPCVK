@@ -47,10 +47,10 @@ namespace DetectingObjectPCVK
             {
                 _device = new FilterInfoCollection(FilterCategory.VideoInputDevice);
                 for (var i = 0; i < _device.Count; i++)
-                    comboBox1.Items.Add(_device[i].Name);              
-                                   
+                    comboBox1.Items.Add(_device[i].Name);
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -68,7 +68,7 @@ namespace DetectingObjectPCVK
             }
         }
         #endregion
-             
+
         #region MyMethods
         private void SrartCameras(int deviceindex)
         {
@@ -120,7 +120,7 @@ namespace DetectingObjectPCVK
             pictureBox1.Image = BlobDetection(_BsourceFrame);
             pictureBox2.Image = _bitmapEdgeImage;
             pictureBox3.Image = _bitmapBinaryImage;
-            pictureBox4.Image = _colorFilterImage;        
+            pictureBox4.Image = _colorFilterImage;
         }
 
         private System.Drawing.Point[] ToPointsArray(List<IntPoint> points)
@@ -344,6 +344,7 @@ namespace DetectingObjectPCVK
                 List<IntPoint> _corners = null;
                 AForge.Point _center;
                 float _radius;
+
                 #region detecting Rectangle
                 ///
                 /// _corners: the corner of Quadrilateral
@@ -356,7 +357,7 @@ namespace DetectingObjectPCVK
                                                    (float)10, (float)10);
 
                     // Drawing setting for outline of detected object
-                    Rectangle[] _rects = _blobCounter.GetObjectsRectangles();                   
+                    Rectangle[] _rects = _blobCounter.GetObjectsRectangles();
                     System.Drawing.Point[] _coordinates = ToPointsArray(_corners);
                     Pen _pen = new Pen(Color.Blue, ipenWidth);
                     int _x = _coordinates[0].X;
@@ -364,7 +365,7 @@ namespace DetectingObjectPCVK
 
                     // Drawing setting for centroid of detected object
                     int _centroid_X = (int)_blobPoints[0].CenterOfGravity.X;
-                    int _centroid_Y = (int)_blobPoints[0].CenterOfGravity.Y;                                        
+                    int _centroid_Y = (int)_blobPoints[0].CenterOfGravity.Y;
 
                     //Drawing the centroid point of object
                     _g.DrawEllipse(_pen, (float)(_centroid_X), (float)(_centroid_Y), (float)10, (float)10);
@@ -377,10 +378,10 @@ namespace DetectingObjectPCVK
                     /// Drawing outline of detected object
                     /// 
                     if (_coordinates.Length == 4)
-                    {                        
+                    {
                         string _shapeString = "" + _shapeChecker.CheckShapeType(_edgePoint);
                         _g.DrawString(_shapeString, _font, _brush, _x, _y);
-                        _g.DrawPolygon(_pen, ToPointsArray(_corners));                        
+                        _g.DrawPolygon(_pen, ToPointsArray(_corners));
                     }
 
                     //size of rectange
@@ -396,9 +397,57 @@ namespace DetectingObjectPCVK
                         _g.DrawString(dis.ToString("N2") + "cm", _font, _brush, _x, _y + 60);
                     }
                 }
+            }
+            #endregion
 
-            return _bitmapSourceImage;
+            #region detecting Circle
+            ///
+            /// _center: the center of circle
+            /// _radius: the radius of circle
+            ///
+            if (_shapeChecker.IsCircle(_edgePoint, out _center, out _radius))
+            {
+                //Drawing the reference point
+                _g.DrawEllipse(_PictureboxPen, (float)(pictureBox1.Size.Width),
+                                               (float)(pictureBox1.Size.Height),
+                                               (float)10, (float)10);
+
+                // Drawing setting for outline of detected object
+                Rectangle[] _rects = _blobCounter.GetObjectsRectangles();
+                Pen _pen = new Pen(Color.Red, ipenWidth);
+                string _shapeString = "" + _shapeChecker.CheckShapeType(_edgePoint);
+                int _x = (int)_center.X;
+                int _y = (int)_center.Y;
+                ///
+                /// Drawing outline of detected object
+                ///
+                _g.DrawString(_shapeString, _font, _brush, _x, _y);
+                _g.DrawEllipse(_pen, (float)(_center.X - _radius),
+                                     (float)(_center.Y - _radius),
+                                     (float)(_radius * 2),
+                                     (float)(_radius * 2));
+
+                //Drawing the centroid point of object
+                int _centroid_X = (int)_blobPoints[0].CenterOfGravity.X;
+                int _centroid_Y = (int)_blobPoints[0].CenterOfGravity.Y;
+                _g.DrawEllipse(_pen, (float)(_centroid_X), (float)(_centroid_Y), (float)10, (float)10);
+                //Degree calculation
+                int _deg_x = _centroid_X - pictureBox1.Size.Width;
+                int _deg_y = pictureBox1.Size.Height - _centroid_Y;
+                textBox1.Text = ("Degree: (" + _deg_x + ", " + _deg_y + ")");
+
+                //size of rectange
+                foreach (Rectangle rc in _rects)
+                {
+                    ///for debug
+                    //System.Diagnostics.Debug.WriteLine(
+                    //    string.Format("Circle size: ({0}, {1})", rc.Width, rc.Height));
+                    iFeatureWidth = rc.Width;
+                    double dis = FindDistance(iFeatureWidth);
+                    _g.DrawString(dis.ToString("N2") + "cm", _font, _brush, _x, _y + 60);
+                }
+            }
+            #endregion
         }
-        #endregion
     }
 }
