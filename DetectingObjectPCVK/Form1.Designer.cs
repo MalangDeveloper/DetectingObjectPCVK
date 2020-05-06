@@ -147,6 +147,7 @@ namespace DetectingObjectPCVK
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.groupBox1.Controls.Add(this.rbGreen);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.rbBlue);
@@ -281,6 +282,7 @@ namespace DetectingObjectPCVK
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.BackColor = System.Drawing.SystemColors.MenuBar;
             this.ClientSize = new System.Drawing.Size(1140, 899);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox1);
