@@ -33,7 +33,7 @@ namespace DetectingObjectPCVK
 
         bool _blurFlag = false;
         int ipenWidth = 5, iFeatureWidth;
-        int iThreshold = 40, iRadius = 40;
+        int iThreshold = 70, iRadius = 190;
         int iColorMode = 1, iRedValue = 220, iGreenValue = 30, iBlueValue = 30;
         public Form1()
         {
@@ -169,12 +169,12 @@ namespace DetectingObjectPCVK
             if (rbRed.Checked == true)
             {
                 iColorMode = 1;
-                sbRadius.Value = 100;
+                sbRadius.Value = 180;
                 iRadius = sbRadius.Value;
 
-                sbRedColor.Value = 110;
-                sbGreenColor.Value = 0;
-                sbBlueColor.Value = 0;
+                sbRedColor.Value = 240;
+                sbGreenColor.Value = 30;
+                sbBlueColor.Value = 30;
 
                 listBox1.Items.Add("Red: " + iRedValue.ToString());
                 ScrollDown();
@@ -186,7 +186,7 @@ namespace DetectingObjectPCVK
             if (rbBlue.Checked == true)
             {
                 iColorMode = 2;
-                sbRadius.Value = 180;
+                sbRadius.Value = 190;
                 iRadius = sbRadius.Value;
 
                 sbRedColor.Value = 30;
@@ -203,12 +203,12 @@ namespace DetectingObjectPCVK
             if (rbGreen.Checked == true)
             {
                 iColorMode = 3;
-                sbRadius.Value = 180;
+                sbRadius.Value = 195;
                 iRadius = sbRadius.Value;
 
-                sbRedColor.Value = 5;
+                sbRedColor.Value = 30;
                 sbGreenColor.Value = 240;
-                sbBlueColor.Value = 5;
+                sbBlueColor.Value = 30;
 
                 listBox1.Items.Add("Green: " + iGreenValue.ToString());
                 ScrollDown();
@@ -435,9 +435,6 @@ namespace DetectingObjectPCVK
                 //size of rectange
                 foreach (Rectangle rc in _rects)
                 {
-                    ///for debug
-                    //System.Diagnostics.Debug.WriteLine(
-                    //    string.Format("Circle size: ({0}, {1})", rc.Width, rc.Height));
                     iFeatureWidth = rc.Width;
                     double dis = FindDistance(iFeatureWidth);
                     _g.DrawString(dis.ToString("N2") + "cm", _font, _brush, _x, _y + 60);

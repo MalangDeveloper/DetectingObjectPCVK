@@ -1,5 +1,5 @@
 # Detecting Object PCVK
-Detectsi Object (Bangun Datar) dengan jarak dan derajat pada kamera
+Detektsi Objek (Bangun Datar) dengan jarak dan derajat pada kamera
 
 Metode perhitungan Blob digunakan untuk mendeteksi object dan warna seperti: 
 	lingkaran berwarna merah
@@ -11,3 +11,5 @@ Proses metode ini sebagai berikut:
 2.	pemfilteran skala abu-abu berdasarkan gambar yang difilter warna.
 3.	pemfilteran biner berdasarkan gambar tepi filter. 
 4.	Sehingga dapat mendeteksi objek, jarak dari kamera.
+
+@2020
